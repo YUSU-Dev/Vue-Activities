@@ -205,8 +205,9 @@ Vue.component("VActivitiesAZ", {
     };
   },
   created() {
-    // Set default headers globally for Axios:
+    // Set default headers globally for Axios & BaseURL:
     axios.defaults.headers.get["X-Site-Id"] = this.siteid;
+    axios.baseUrl = "https://pluto.sums.su/api";
 
     let self = this;
     if (self.selectedparents) {
@@ -224,9 +225,7 @@ Vue.component("VActivitiesAZ", {
     if (!self.selectedcategory) {
       //Get parents
       axios
-        .get(
-          "https://pluto.sums.su/api/groups/categories?sortBy=name&isParent=1"
-        )
+        .get("/groups/categories?sortBy=name&isParent=1")
         .then(function (response) {
           response.data.forEach((category) => {
             if (self.SelectedParents.includes(category.id.toString())) {
@@ -237,7 +236,7 @@ Vue.component("VActivitiesAZ", {
       //get categories
       axios
         .get(
-          "https://pluto.sums.su/api/groups/categories?sortBy=name&isParent=0&parentIds=" +
+          "/groups/categories?sortBy=name&isParent=0&parentIds=" +
             self.selectedparents
         )
         .then(function (response) {
@@ -275,23 +274,21 @@ Vue.component("VActivitiesAZ", {
       } else if (self.SelectedParent) {
         parameters += "&parentCategoryId=" + self.SelectedParent.id;
       }
-      axios
-        .get("https://pluto.sums.su/api/groups?" + parameters)
-        .then(function (response) {
-          //if we want more events (append = true), add to array
-          if (append) {
-            self.Groups = [...self.Groups, ...response.data.data];
-          } else {
-            //otherwise replace current events
-            self.Groups = response.data.data;
-          }
-          //If the API says there are more results (ie another page), update the template accordingly
-          if (response.data.next_page_url) {
-            self.MoreResults = true;
-          } else {
-            self.MoreResults = false;
-          }
-        });
+      axios.get("/groups?" + parameters).then(function (response) {
+        //if we want more events (append = true), add to array
+        if (append) {
+          self.Groups = [...self.Groups, ...response.data.data];
+        } else {
+          //otherwise replace current events
+          self.Groups = response.data.data;
+        }
+        //If the API says there are more results (ie another page), update the template accordingly
+        if (response.data.next_page_url) {
+          self.MoreResults = true;
+        } else {
+          self.MoreResults = false;
+        }
+      });
     },
     moreGroups() {
       this.Page++;
