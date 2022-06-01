@@ -16,7 +16,7 @@ let layout = `
             name="search"
             placeholder="Search..."
             style="height: 40px"
-            v-model="search"
+            v-model="Search"
           />
         </div>
         <div class="col-12 text-center" v-if="Search">
