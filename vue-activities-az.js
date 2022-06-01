@@ -231,9 +231,7 @@ Vue.component("VActivitiesAZ", {
         )
         .then(function (response) {
           self.Categories = response.data;
-          let idArray = self.Categories.map(function (item) {
-            return item["id"];
-          });
+          let idArray = self.Categories.map((item) => item["id"]);
           self.CategoryIDs = idArray.join();
           self.getGroups();
         });
