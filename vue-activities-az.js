@@ -265,19 +265,14 @@ Vue.component("VActivitiesAZ", {
         parameters += "&parentCategoryId=" + self.SelectedParent.id;
       }
       axios.get("/groups?" + parameters).then(function (response) {
-        //if we want more events (append = true), add to array
-        if (append) {
-          self.Groups = [...self.Groups, ...response.data.data];
-        } else {
-          //otherwise replace current events
-          self.Groups = response.data.data;
-        }
+        append
+          ? (self.Groups = [...self.Groups, ...response.data.data]) // Merge if append
+          : (self.Groups = response.data.data); // Else replace data
+
         //If the API says there are more results (ie another page), update the template accordingly
-        if (response.data.next_page_url) {
-          self.hasMoreResults = true;
-        } else {
-          self.hasMoreResults = false;
-        }
+        response.data.next_page_url
+          ? (self.hasMoreResults = true)
+          : (self.hasMoreResults = false);
       });
     },
     moreGroups() {
