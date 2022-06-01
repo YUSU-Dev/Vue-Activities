@@ -35,10 +35,6 @@ let layout = `
               <li
                 v-for="parent in ParentCategories"
                 @click.prevent="updateParameters('', parent)"
-                  SelectedParent = parent;
-                  SelectedCategory = '';
-                  getGroups;
-                "
                 class="nav-item"
               >
                 <a
@@ -53,9 +49,6 @@ let layout = `
               <li
                 class="nav-item"
                 @click.prevent="updateParameters('')"
-                  SelectedCategory = '';
-                  getGroups;
-                "
               >
                 <a
                   class="nav-link"
@@ -68,9 +61,6 @@ let layout = `
               <li
                 v-for="category in filteredCategories"
                 @click.prevent="updateParameters(category)"
-                  SelectedCategory = category;
-                  getGroups;
-                "
                 class="nav-item"
                 v-if="SelectedParent && category.parent_id"
               >
@@ -168,7 +158,7 @@ let layout = `
           </div>
           <!-- Activity end-->
         </div>
-        <div class="row d-flex justify-content-center m-3" v-if="MoreResults">
+        <div class="row d-flex justify-content-center m-3" v-if="hasMoreResults">
           <button type="button" class="btn-more" @click="moreGroups">
             Load More <i class="fa fa-chevron-down"></i>
           </button>
@@ -201,7 +191,7 @@ Vue.component("VActivitiesAZ", {
       SelectedParents: [],
       Search: "",
       Page: 1,
-      MoreResults: false,
+      hasMoreResults: false,
     };
   },
   created() {
@@ -284,9 +274,9 @@ Vue.component("VActivitiesAZ", {
         }
         //If the API says there are more results (ie another page), update the template accordingly
         if (response.data.next_page_url) {
-          self.MoreResults = true;
+          self.hasMoreResults = true;
         } else {
-          self.MoreResults = false;
+          self.hasMoreResults = false;
         }
       });
     },
