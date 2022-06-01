@@ -176,133 +176,147 @@ let layout = `
       </div>
     </div>
   </div>
-`
+`;
 
-Vue.component('VActivitiesAZ', {
-    template: layout,
-    props: ['siteid', 'selectedparents', 'title', 'selectedcategory'],
-    data() {
-        return {
-            Categories: [],
-            CategoryIDs: "",
-            ParentCategories: [],
-            Groups: [],
-            SelectedCategory: "",
-            SelectedParent: "",
-            SelectedParents: [],
-            Search: '',
-            Page: 1,
-            MoreResults: false,
-        }
-    },
-    created() {
-        var self = this;
-        if (self.selectedparents) {
-          self.SelectedParents = self.selectedparents.split(",");
-        } else if (self.selectedcategory) {
-          self.CategoryIDs = self.selectedcategory;
-        } else {
-          self.SelectedParents = "2,24";
-        }
-        
-        if (!self.title){
-          self.title = "Clubs and Societies: A-Z";
-        }
-        //check if looking for a specific activity, search, etc...
-        let urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('search')) {
-            self.Search = urlParams.get('search');
-        }
-        //if we already have a category, don't get more info
-        if (!self.selectedcategory) {
-          //Get parents
-          axios.get('https://pluto.sums.su/api/groups/categories?sortBy=name&isParent=1', {
-              headers: {
-                  'X-Site-Id': self.siteid
-              }
-          }).then(function (response) {
-              response.data.forEach(category => {
-                  if (self.SelectedParents.includes(category.id.toString())) {
-                      self.ParentCategories = [...self.ParentCategories, category];
-                  }
-              });
-          });
-          //get categories
-          axios.get('https://pluto.sums.su/api/groups/categories?sortBy=name&isParent=0&parentIds=' + self.selectedparents , {
-              headers: {
-                  'X-Site-Id': self.siteid
-              }
-          }).then(function (response) {
-              self.Categories = response.data;
-              let idArray = self.Categories.map(function(item) {
-                return item['id'];
-              });
-              self.CategoryIDs = idArray.join();
-              self.getGroups();
-          });
-        } else {
-          self.getGroups();
-        }
-    },
-    methods: {
-        /**
-         * Fetch groups from API
-         * @param bool append - are we getting more groups to append to the current list?
-         */
-        getGroups: function (append = false) {
-            let self = this;
-            if (!append) { self.Page = 1; }
-            let parameters = 'sortBy=name&perPage=20&page=' + self.Page;
-            //add relevant parameters to the group search
-            if (self.CategoryIDs) {
-              parameters += '&categoryIds=' + self.CategoryIDs;
-            }
-            if (self.Search) {
-                parameters += '&searchTerm=' + self.Search;
-                self.SelectedCategory = self.SelectedParent = "";
-            } else if (self.SelectedCategory) {
-                parameters += '&categoryId=' + self.SelectedCategory.id;
-            } else if (self.SelectedParent) {
-                parameters += '&parentCategoryId=' + self.SelectedParent.id;
-            }
-            axios.get('https://pluto.sums.su/api/groups?' + parameters, {
-                headers: {
-                    'X-Site-Id': self.siteid
-                }
-            }).then(function (response) {
-                //if we want more events (append = true), add to array
-                if (append) {
-                    self.Groups = [...self.Groups, ...response.data.data];
-                } else {
-                    //otherwise replace current events
-                    self.Groups = response.data.data;
-                }
-                //If the API says there are more results (ie another page), update the template accordingly
-                if (response.data.next_page_url) {
-                    self.MoreResults = true
-                } else {
-                    self.MoreResults = false
-                }
-            })
-        },
-        moreGroups() {
-            this.Page++;
-            this.getGroups(true);
-        },
-        search(event) {
-            this.Search = event.target.value
-            this.getGroups();
-        },
-    },
-    computed: {
-        filteredCategories() {
-            let self = this;
-            return this.Categories.filter(category => {
-                if (self.SelectedParent) {
-                    return category.parent_id == self.SelectedParent.id
-                }
-
-            });
-        }
+Vue.component("VActivitiesAZ", {
+  template: layout,
+  props: ["siteid", "selectedparents", "title", "selectedcategory"],
+  data() {
+    return {
+      Categories: [],
+      CategoryIDs: "",
+      ParentCategories: [],
+      Groups: [],
+      SelectedCategory: "",
+      SelectedParent: "",
+      SelectedParents: [],
+      Search: "",
+      Page: 1,
+      MoreResults: false,
+    };
+  },
+  created() {
+    var self = this;
+    if (self.selectedparents) {
+      self.SelectedParents = self.selectedparents.split(",");
+    } else if (self.selectedcategory) {
+      self.CategoryIDs = self.selectedcategory;
+    } else {
+      self.SelectedParents = "2,24";
     }
+
+    if (!self.title) {
+      self.title = "Clubs and Societies: A-Z";
+    }
+    //check if looking for a specific activity, search, etc...
+    let urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("search")) {
+      self.Search = urlParams.get("search");
+    }
+    //if we already have a category, don't get more info
+    if (!self.selectedcategory) {
+      //Get parents
+      axios
+        .get(
+          "https://pluto.sums.su/api/groups/categories?sortBy=name&isParent=1",
+          {
+            headers: {
+              "X-Site-Id": self.siteid,
+            },
+          }
+        )
+        .then(function (response) {
+          response.data.forEach((category) => {
+            if (self.SelectedParents.includes(category.id.toString())) {
+              self.ParentCategories = [...self.ParentCategories, category];
+            }
+          });
+        });
+      //get categories
+      axios
+        .get(
+          "https://pluto.sums.su/api/groups/categories?sortBy=name&isParent=0&parentIds=" +
+            self.selectedparents,
+          {
+            headers: {
+              "X-Site-Id": self.siteid,
+            },
+          }
+        )
+        .then(function (response) {
+          self.Categories = response.data;
+          let idArray = self.Categories.map(function (item) {
+            return item["id"];
+          });
+          self.CategoryIDs = idArray.join();
+          self.getGroups();
+        });
+    } else {
+      self.getGroups();
+    }
+  },
+  methods: {
+    /**
+     * Fetch groups from API
+     * @param bool append - are we getting more groups to append to the current list?
+     */
+    getGroups: function (append = false) {
+      let self = this;
+      if (!append) {
+        self.Page = 1;
+      }
+      let parameters = "sortBy=name&perPage=20&page=" + self.Page;
+      //add relevant parameters to the group search
+      if (self.CategoryIDs) {
+        parameters += "&categoryIds=" + self.CategoryIDs;
+      }
+      if (self.Search) {
+        parameters += "&searchTerm=" + self.Search;
+        self.SelectedCategory = self.SelectedParent = "";
+      } else if (self.SelectedCategory) {
+        parameters += "&categoryId=" + self.SelectedCategory.id;
+      } else if (self.SelectedParent) {
+        parameters += "&parentCategoryId=" + self.SelectedParent.id;
+      }
+      axios
+        .get("https://pluto.sums.su/api/groups?" + parameters, {
+          headers: {
+            "X-Site-Id": self.siteid,
+          },
+        })
+        .then(function (response) {
+          //if we want more events (append = true), add to array
+          if (append) {
+            self.Groups = [...self.Groups, ...response.data.data];
+          } else {
+            //otherwise replace current events
+            self.Groups = response.data.data;
+          }
+          //If the API says there are more results (ie another page), update the template accordingly
+          if (response.data.next_page_url) {
+            self.MoreResults = true;
+          } else {
+            self.MoreResults = false;
+          }
+        });
+    },
+    moreGroups() {
+      this.Page++;
+      this.getGroups(true);
+    },
+    search(event) {
+      this.Search = event.target.value;
+      this.getGroups();
+    },
+  },
+  computed: {
+    filteredCategories() {
+      let self = this;
+      return this.Categories.filter((category) => {
+        if (self.SelectedParent) {
+          return category.parent_id == self.SelectedParent.id;
+        }
+      });
+    },
+  },
 });
