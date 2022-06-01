@@ -42,8 +42,8 @@ let layout = `
                 class="nav-item"
               >
                 <a
-                  v-bind:class="{ active: SelectedParent.id === parent.id }"
                   class="nav-link"
+                  :class="{ active: SelectedParent.id === parent.id }"
                 >
                   <span>{{ parent.name }}</span>
                 </a>
@@ -58,9 +58,9 @@ let layout = `
                 "
               >
                 <a
-                  v-bind:class="{ active: SelectedCategory === '' }"
-                  href="#"
                   class="nav-link"
+                  :class="{ active: SelectedCategory === '' }"
+                  href="#"
                 >
                   <span>All</span>
                 </a>
@@ -75,8 +75,8 @@ let layout = `
                 v-if="SelectedParent && category.parent_id"
               >
                 <a
-                  v-bind:class="{ active: SelectedCategory.id === category.id }"
                   class="nav-link"
+                  :class="{ active: SelectedCategory.id === category.id }"
                   :href="'/student-life/clubs-and-socs?category=' + category.id"
                 >
                   <span>{{ category.name }}</span>
@@ -108,10 +108,10 @@ let layout = `
                       background-size: contain;
                       cursor: pointer;
                     "
-                    v-bind:style="
+                    :style="
                       'background-image:url(' + activity.thumbnail_url + ');'
                     "
-                    v-bind:alt="activity.name + ' Logo'"
+                    :alt="activity.name + ' Logo'"
                   />
                   <div
                     v-else
@@ -138,10 +138,10 @@ let layout = `
                       background-size: contain;
                       cursor: pointer;
                     "
-                    v-bind:style="
+                    :style="
                       'background-image:url(' + activity.thumbnail_url + ');'
                     "
-                    v-bind:alt="activity.name + ' Logo'"
+                    :alt="activity.name + ' Logo'"
                   />
                   <div
                     v-else
