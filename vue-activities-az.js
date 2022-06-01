@@ -181,14 +181,14 @@ let layout = `
 Vue.component("VActivitiesAZ", {
   template: layout,
   props: {
-    siteid: { type: String, required: true },
-    selectedparents: { type: String, required: false, default: "2,24" },
+    siteId: { type: String, required: true },
+    selectedParents: { type: String, required: false, default: "2,24" },
     title: {
       type: String,
       required: false,
       default: "Clubs and Societies: A-Z",
     },
-    selectedcategory: { type: String, required: false },
+    selectedCategory: { type: String, required: false },
   },
   data() {
     return {
@@ -206,14 +206,14 @@ Vue.component("VActivitiesAZ", {
   },
   created() {
     // Set default headers globally for Axios & BaseURL:
-    axios.defaults.headers.get["X-Site-Id"] = this.siteid;
+    axios.defaults.headers.get["X-Site-Id"] = this.siteId;
     axios.baseUrl = "https://pluto.sums.su/api";
 
     let self = this;
-    if (self.selectedparents) {
-      self.SelectedParents = self.selectedparents.split(",");
-    } else if (self.selectedcategory) {
-      self.CategoryIDs = self.selectedcategory;
+    if (self.selectedParents) {
+      self.SelectedParents = self.selectedParents.split(",");
+    } else if (self.selectedCategory) {
+      self.CategoryIDs = self.selectedCategory;
     }
 
     //check if looking for a specific activity, search, etc...
@@ -222,7 +222,7 @@ Vue.component("VActivitiesAZ", {
       self.Search = urlParams.get("search");
     }
     //if we already have a category, don't get more info
-    if (!self.selectedcategory) {
+    if (!self.selectedCategory) {
       //Get parents
       axios
         .get("/groups/categories?sortBy=name&isParent=1")
@@ -237,7 +237,7 @@ Vue.component("VActivitiesAZ", {
       axios
         .get(
           "/groups/categories?sortBy=name&isParent=0&parentIds=" +
-            self.selectedparents
+            self.selectedParents
         )
         .then(function (response) {
           self.Categories = response.data;
