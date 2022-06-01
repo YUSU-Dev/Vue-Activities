@@ -173,7 +173,7 @@ Vue.component("VActivitiesAZ", {
       Groups: [],
       SelectedCategory: "",
       SelectedParent: "",
-      SelectedParents: [],
+      SelectedParents: this.selectedParents.split(",") || [],
       Search: "",
       Page: 1,
       hasMoreResults: false,
@@ -185,9 +185,7 @@ Vue.component("VActivitiesAZ", {
     axios.baseUrl = "https://pluto.sums.su/api";
 
     let self = this;
-    if (self.selectedParents) {
-      self.SelectedParents = self.selectedParents.split(",");
-    } else if (self.selectedCategory) {
+    if (self.selectedCategory) {
       self.CategoryIDs = self.selectedCategory;
     }
 
