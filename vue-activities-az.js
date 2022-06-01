@@ -10,11 +10,11 @@ let layout = `
         </div>
         <div class="col-8 col-lg-4 my-auto">
           <input
-            class="nav-item w-100 float-right"
+            name="search"
             type="text"
             aria-label="search for an activity"
-            name="search"
             placeholder="Search..."
+            class="nav-item w-100 float-right"
             style="height: 40px"
             v-model="Search"
           />
