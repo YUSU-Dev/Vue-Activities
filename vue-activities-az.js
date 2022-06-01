@@ -34,7 +34,7 @@ let layout = `
             >
               <li
                 v-for="parent in ParentCategories"
-                @click.prevent="
+                @click.prevent="updateParameters('', parent)"
                   SelectedParent = parent;
                   SelectedCategory = '';
                   getGroups;
@@ -52,7 +52,7 @@ let layout = `
             <ul class="nav nav-pills nav-fill g-mb-30" v-if="SelectedParent">
               <li
                 class="nav-item"
-                @click.prevent="
+                @click.prevent="updateParameters('')"
                   SelectedCategory = '';
                   getGroups;
                 "
@@ -67,7 +67,7 @@ let layout = `
               </li>
               <li
                 v-for="category in filteredCategories"
-                @click.prevent="
+                @click.prevent="updateParameters(category)"
                   SelectedCategory = category;
                   getGroups;
                 "
@@ -296,6 +296,11 @@ Vue.component("VActivitiesAZ", {
     },
     search(event) {
       this.Search = event.target.value;
+      this.getGroups();
+    },
+    updateParameters(category, parent = null) {
+      category ? (this.SelectedCategory = category) : null;
+      parent ? (this.SelectedParent = parent) : null;
       this.getGroups();
     },
   },
