@@ -269,7 +269,6 @@ Vue.component("VActivitiesAZ", {
           ? (self.Groups = [...self.Groups, ...response.data.data]) // Merge if append
           : (self.Groups = response.data.data); // Else replace data
 
-        //If the API says there are more results (ie another page), update the template accordingly
         response.data.next_page_url
           ? (self.hasMoreResults = true)
           : (self.hasMoreResults = false);
@@ -292,11 +291,13 @@ Vue.component("VActivitiesAZ", {
   computed: {
     filteredCategories() {
       let self = this;
-      return this.Categories.filter((category) => {
-        if (self.SelectedParent) {
-          return category.parent_id === self.SelectedParent.id;
-        }
-      });
+      if (!self.SelectedParent) {
+        return self.Categories;
+      }
+
+      return this.Categories.filter(
+        (category) => category.parent_id === self.SelectedParent.id
+      );
     },
   },
 });
