@@ -37,7 +37,7 @@ let layout = `
                 @click.prevent="
                   SelectedParent = parent;
                   SelectedCategory = '';
-                  getGroups();
+                  getGroups;
                 "
                 class="nav-item"
               >
@@ -54,7 +54,7 @@ let layout = `
                 class="nav-item"
                 @click.prevent="
                   SelectedCategory = '';
-                  getGroups();
+                  getGroups;
                 "
               >
                 <a
@@ -69,7 +69,7 @@ let layout = `
                 v-for="category in filteredCategories"
                 @click.prevent="
                   SelectedCategory = category;
-                  getGroups();
+                  getGroups;
                 "
                 class="nav-item"
                 v-if="SelectedParent && category.parent_id"
@@ -169,7 +169,7 @@ let layout = `
           <!-- Activity end-->
         </div>
         <div class="row d-flex justify-content-center m-3" v-if="MoreResults">
-          <button type="button" class="btn-more" @click="moreGroups()">
+          <button type="button" class="btn-more" @click="moreGroups">
             Load More <i class="fa fa-chevron-down"></i>
           </button>
         </div>
