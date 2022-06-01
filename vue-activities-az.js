@@ -4,36 +4,81 @@ let layout = `
       <div class="row activities-list justify-content-center">
         <div class="col-12 text-center col-lg-8 pb-2">
           <div class="heading heading--primary heading--center pb-2">
-            <h2 class="heading__title d-none d-lg-block">{{title}}</h2>
-            <p class="h3 d-block d-lg-none text-dark">{{title}}</p>
+            <h2 class="heading__title d-none d-lg-block">{{ title }}</h2>
+            <p class="h3 d-block d-lg-none text-dark">{{ title }}</p>
           </div>
         </div>
         <div class="col-8 col-lg-4 my-auto">
-          <input class="nav-item w-100 float-right" type="text" aria-label="search for an activity" 
-                 name="search" placeholder="Search..." style="height: 40px;" 
-                 v-on:keyup="search($event)"/>
+          <input
+            class="nav-item w-100 float-right"
+            type="text"
+            aria-label="search for an activity"
+            name="search"
+            placeholder="Search..."
+            style="height: 40px"
+            v-model="search"
+          />
         </div>
         <div class="col-12 text-center" v-if="Search">
           <p class="h3">Search Results</p>
         </div>
-        <div class="col-12 d-none d-lg-block" v-if="!Search && ParentCategories.length > 0">
+        <div
+          class="col-12 d-none d-lg-block"
+          v-if="!Search && ParentCategories.length > 0"
+        >
           <div class="nav-societies-type text-center">
             <p class="h3">Filters</p>
-            <ul class="clubs-nav-block nav nav-tabs nav-justified u-nav-v2-1 u-nav-rounded-3 u-nav-primary g-mb-30" data-btn-classes="btn btn-md btn-block u-btn-outline-primary g-mb-30">
-              <li v-for="Parent in ParentCategories" @click.prevent="SelectedParent = Parent; SelectedCategory = ''; getGroups();" class="nav-item">
-                <a v-bind:class="{'active':(SelectedParent.id === Parent.id)}" class="nav-link">
+            <ul
+              class="clubs-nav-block nav nav-tabs nav-justified u-nav-v2-1 u-nav-rounded-3 u-nav-primary g-mb-30"
+              data-btn-classes="btn btn-md btn-block u-btn-outline-primary g-mb-30"
+            >
+              <li
+                v-for="Parent in ParentCategories"
+                @click.prevent="
+                  SelectedParent = Parent;
+                  SelectedCategory = '';
+                  getGroups();
+                "
+                class="nav-item"
+              >
+                <a
+                  v-bind:class="{ active: SelectedParent.id === Parent.id }"
+                  class="nav-link"
+                >
                   <span>{{ Parent.name }}</span>
                 </a>
               </li>
             </ul>
             <ul class="nav nav-pills nav-fill g-mb-30" v-if="SelectedParent">
-              <li class="nav-item" @click.prevent="SelectedCategory = ''; getGroups();">
-                <a v-bind:class="{'active':(SelectedCategory === '')}" href="#" class="nav-link">
+              <li
+                class="nav-item"
+                @click.prevent="
+                  SelectedCategory = '';
+                  getGroups();
+                "
+              >
+                <a
+                  v-bind:class="{ active: SelectedCategory === '' }"
+                  href="#"
+                  class="nav-link"
+                >
                   <span>All</span>
                 </a>
               </li>
-              <li v-for="Category in filteredCategories" @click.prevent="SelectedCategory = Category; getGroups();" class="nav-item" v-if="SelectedParent && Category.parent_id ">
-                <a v-bind:class="{'active':(SelectedCategory.id === Category.id)}" class="nav-link" :href="'/student-life/clubs-and-socs?category='+Category.id">
+              <li
+                v-for="Category in filteredCategories"
+                @click.prevent="
+                  SelectedCategory = Category;
+                  getGroups();
+                "
+                class="nav-item"
+                v-if="SelectedParent && Category.parent_id"
+              >
+                <a
+                  v-bind:class="{ active: SelectedCategory.id === Category.id }"
+                  class="nav-link"
+                  :href="'/student-life/clubs-and-socs?category=' + Category.id"
+                >
                   <span>{{ Category.name }}</span>
                 </a>
               </li>
@@ -41,36 +86,81 @@ let layout = `
           </div>
         </div>
         <div class="col-12">
-            <hr />
+          <hr />
         </div>
         <div class="row socs-list g-mb-10 p-0 justify-content-center w-100">
           <!-- Activity -->
-          <div class="col-5 col-md-2 mx-2 my-2 activity-article d-block" v-for="Activity in Groups">
+          <div
+            class="col-5 col-md-2 mx-2 my-2 activity-article d-block"
+            v-for="Activity in Groups"
+          >
             <div>
               <a :href="'/activities/view/' + Activity.url_name">
                 <div>
-                  <div v-if="Activity.thumbnail_url" 
-                       class="d-none d-md-block justify-content-center" 
-                       style="height: 9em;overflow:hidden; background-position: center; background-repeat: no-repeat; background-size: contain; cursor:pointer;" 
-                       v-bind:style="'background-image:url(' + Activity.thumbnail_url + ');'"
-                       v-bind:alt="Activity.name + ' Logo'" />
-                  <div v-else class="d-none d-md-block justify-content-center" 
-                       style="height: 9em;overflow:hidden ;background-image:url('https://yusu.s3.eu-west-2.amazonaws.com/sums/website/images/placeholder-events.png');
-                              background-position: center; background-repeat: no-repeat; background-size: contain; cursor:pointer;" 
-                       alt="Yusu Activities Logo"/>
-                  <div v-if="Activity.thumbnail_url" 
-                       class="d-md-none justify-content-center" 
-                       style="height: 9em;overflow:hidden; background-position: center; background-repeat: no-repeat; background-size: contain; cursor:pointer;" 
-                       v-bind:style="'background-image:url(' + Activity.thumbnail_url + ');'"
-                       v-bind:alt="Activity.name + ' Logo'" />
-                  <div v-else 
-                       class="d-md-none justify-content-center" 
-                       style="height: 5em;overflow:hidden ;background-image:url('https://yusu.s3.eu-west-2.amazonaws.com/sums/website/images/placeholder-events.png');
-                              background-position: center; background-repeat: no-repeat; background-size: contain; cursor:pointer;" 
-                       alt="Yusu Activities Logo" />
-
+                  <div
+                    v-if="Activity.thumbnail_url"
+                    class="d-none d-md-block justify-content-center"
+                    style="
+                      height: 9em;
+                      overflow: hidden;
+                      background-position: center;
+                      background-repeat: no-repeat;
+                      background-size: contain;
+                      cursor: pointer;
+                    "
+                    v-bind:style="
+                      'background-image:url(' + Activity.thumbnail_url + ');'
+                    "
+                    v-bind:alt="Activity.name + ' Logo'"
+                  />
+                  <div
+                    v-else
+                    class="d-none d-md-block justify-content-center"
+                    style="
+                      height: 9em;
+                      overflow: hidden;
+                      background-image: url('https://yusu.s3.eu-west-2.amazonaws.com/sums/website/images/placeholder-events.png');
+                      background-position: center;
+                      background-repeat: no-repeat;
+                      background-size: contain;
+                      cursor: pointer;
+                    "
+                    alt="Yusu Activities Logo"
+                  />
+                  <div
+                    v-if="Activity.thumbnail_url"
+                    class="d-md-none justify-content-center"
+                    style="
+                      height: 9em;
+                      overflow: hidden;
+                      background-position: center;
+                      background-repeat: no-repeat;
+                      background-size: contain;
+                      cursor: pointer;
+                    "
+                    v-bind:style="
+                      'background-image:url(' + Activity.thumbnail_url + ');'
+                    "
+                    v-bind:alt="Activity.name + ' Logo'"
+                  />
+                  <div
+                    v-else
+                    class="d-md-none justify-content-center"
+                    style="
+                      height: 5em;
+                      overflow: hidden;
+                      background-image: url('https://yusu.s3.eu-west-2.amazonaws.com/sums/website/images/placeholder-events.png');
+                      background-position: center;
+                      background-repeat: no-repeat;
+                      background-size: contain;
+                      cursor: pointer;
+                    "
+                    alt="Yusu Activities Logo"
+                  />
                 </div>
-                <div class="h6 g-color-grey g-mb-5 text-center align-bottom btn-block">
+                <div
+                  class="h6 g-color-grey g-mb-5 text-center align-bottom btn-block"
+                >
                   <p class="g-color-black">{{ Activity.name }}</p>
                 </div>
               </a>
@@ -79,7 +169,9 @@ let layout = `
           <!-- Activity end-->
         </div>
         <div class="row d-flex justify-content-center m-3" v-if="MoreResults">
-          <button type="button" class="btn-more" @click="moreGroups()">Load More <i class="fa fa-chevron-down"></i></button>
+          <button type="button" class="btn-more" @click="moreGroups()">
+            Load More <i class="fa fa-chevron-down"></i>
+          </button>
         </div>
       </div>
     </div>
