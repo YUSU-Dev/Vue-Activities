@@ -33,19 +33,19 @@ let layout = `
               data-btn-classes="btn btn-md btn-block u-btn-outline-primary g-mb-30"
             >
               <li
-                v-for="Parent in ParentCategories"
+                v-for="parent in ParentCategories"
                 @click.prevent="
-                  SelectedParent = Parent;
+                  SelectedParent = parent;
                   SelectedCategory = '';
                   getGroups();
                 "
                 class="nav-item"
               >
                 <a
-                  v-bind:class="{ active: SelectedParent.id === Parent.id }"
+                  v-bind:class="{ active: SelectedParent.id === parent.id }"
                   class="nav-link"
                 >
-                  <span>{{ Parent.name }}</span>
+                  <span>{{ parent.name }}</span>
                 </a>
               </li>
             </ul>
@@ -66,20 +66,20 @@ let layout = `
                 </a>
               </li>
               <li
-                v-for="Category in filteredCategories"
+                v-for="category in filteredCategories"
                 @click.prevent="
-                  SelectedCategory = Category;
+                  SelectedCategory = category;
                   getGroups();
                 "
                 class="nav-item"
-                v-if="SelectedParent && Category.parent_id"
+                v-if="SelectedParent && category.parent_id"
               >
                 <a
-                  v-bind:class="{ active: SelectedCategory.id === Category.id }"
+                  v-bind:class="{ active: SelectedCategory.id === category.id }"
                   class="nav-link"
-                  :href="'/student-life/clubs-and-socs?category=' + Category.id"
+                  :href="'/student-life/clubs-and-socs?category=' + category.id"
                 >
-                  <span>{{ Category.name }}</span>
+                  <span>{{ category.name }}</span>
                 </a>
               </li>
             </ul>
@@ -92,13 +92,13 @@ let layout = `
           <!-- Activity -->
           <div
             class="col-5 col-md-2 mx-2 my-2 activity-article d-block"
-            v-for="Activity in Groups"
+            v-for="activity in Groups"
           >
             <div>
-              <a :href="'/activities/view/' + Activity.url_name">
+              <a :href="'/activities/view/' + activity.url_name">
                 <div>
                   <div
-                    v-if="Activity.thumbnail_url"
+                    v-if="activity.thumbnail_url"
                     class="d-none d-md-block justify-content-center"
                     style="
                       height: 9em;
@@ -109,9 +109,9 @@ let layout = `
                       cursor: pointer;
                     "
                     v-bind:style="
-                      'background-image:url(' + Activity.thumbnail_url + ');'
+                      'background-image:url(' + activity.thumbnail_url + ');'
                     "
-                    v-bind:alt="Activity.name + ' Logo'"
+                    v-bind:alt="activity.name + ' Logo'"
                   />
                   <div
                     v-else
@@ -128,7 +128,7 @@ let layout = `
                     alt="Yusu Activities Logo"
                   />
                   <div
-                    v-if="Activity.thumbnail_url"
+                    v-if="activity.thumbnail_url"
                     class="d-md-none justify-content-center"
                     style="
                       height: 9em;
@@ -139,9 +139,9 @@ let layout = `
                       cursor: pointer;
                     "
                     v-bind:style="
-                      'background-image:url(' + Activity.thumbnail_url + ');'
+                      'background-image:url(' + activity.thumbnail_url + ');'
                     "
-                    v-bind:alt="Activity.name + ' Logo'"
+                    v-bind:alt="activity.name + ' Logo'"
                   />
                   <div
                     v-else
@@ -161,7 +161,7 @@ let layout = `
                 <div
                   class="h6 g-color-grey g-mb-5 text-center align-bottom btn-block"
                 >
-                  <p class="g-color-black">{{ Activity.name }}</p>
+                  <p class="g-color-black">{{ activity.name }}</p>
                 </div>
               </a>
             </div>
