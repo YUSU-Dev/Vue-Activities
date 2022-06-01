@@ -86,9 +86,8 @@ let layout = `
           >
             <div>
               <a :href="'/activities/view/' + activity.url_name">
-                <div>
+                <div v-if="activity.thumbnail_url">
                   <div
-                    v-if="activity.thumbnail_url"
                     class="d-none d-md-block justify-content-center"
                     style="
                       height: 9em;
@@ -104,21 +103,6 @@ let layout = `
                     :alt="activity.name + ' Logo'"
                   />
                   <div
-                    v-else
-                    class="d-none d-md-block justify-content-center"
-                    style="
-                      height: 9em;
-                      overflow: hidden;
-                      background-image: url('https://yusu.s3.eu-west-2.amazonaws.com/sums/website/images/placeholder-events.png');
-                      background-position: center;
-                      background-repeat: no-repeat;
-                      background-size: contain;
-                      cursor: pointer;
-                    "
-                    alt="Yusu Activities Logo"
-                  />
-                  <div
-                    v-if="activity.thumbnail_url"
                     class="d-md-none justify-content-center"
                     style="
                       height: 9em;
@@ -133,21 +117,22 @@ let layout = `
                     "
                     :alt="activity.name + ' Logo'"
                   />
-                  <div
-                    v-else
-                    class="d-md-none justify-content-center"
-                    style="
-                      height: 5em;
-                      overflow: hidden;
-                      background-image: url('https://yusu.s3.eu-west-2.amazonaws.com/sums/website/images/placeholder-events.png');
-                      background-position: center;
-                      background-repeat: no-repeat;
-                      background-size: contain;
-                      cursor: pointer;
-                    "
-                    alt="Yusu Activities Logo"
-                  />
-                </div>
+              </div>
+               <div v-else>
+                      <div
+                        class="d-md-none justify-content-center"
+                        style="
+                          height: 5em;
+                          overflow: hidden;
+                          background-image: url('https://yusu.s3.eu-west-2.amazonaws.com/sums/website/images/placeholder-events.png');
+                          background-position: center;
+                          background-repeat: no-repeat;
+                          background-size: contain;
+                          cursor: pointer;
+                        "
+                        alt="Yusu Activities Logo"
+                      />
+                  </div>
                 <div
                   class="h6 g-color-grey g-mb-5 text-center align-bottom btn-block"
                 >
@@ -206,14 +191,14 @@ Vue.component("VActivitiesAZ", {
       self.CategoryIDs = self.selectedCategory;
     }
 
-    //check if looking for a specific activity, search, etc...
+    // check if looking for a specific activity, search, etc...
     let urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has("search")) {
-      self.Search = urlParams.get("search");
-    }
-    //if we already have a category, don't get more info
+
+    urlParams.has("search") ? (self.Search = urlParams.get("search")) : null;
+
+    // if we already have a category, don't get more info
     if (!self.selectedCategory) {
-      //Get parents
+      // Get parent categories
       axios
         .get("/groups/categories?sortBy=name&isParent=1")
         .then(function (response) {
@@ -223,7 +208,7 @@ Vue.component("VActivitiesAZ", {
             }
           });
         });
-      //get categories
+      // get sub categories
       axios
         .get(
           "/groups/categories?sortBy=name&isParent=0&parentIds=" +
@@ -233,11 +218,10 @@ Vue.component("VActivitiesAZ", {
           self.Categories = response.data;
           let idArray = self.Categories.map((item) => item["id"]);
           self.CategoryIDs = idArray.join();
-          self.getGroups();
         });
-    } else {
-      self.getGroups();
     }
+
+    self.getGroups();
   },
   methods: {
     /**
@@ -250,7 +234,7 @@ Vue.component("VActivitiesAZ", {
         self.Page = 1;
       }
       let parameters = "sortBy=name&perPage=20&page=" + self.Page;
-      //add relevant parameters to the group search
+      // add relevant parameters to the group search
       if (self.CategoryIDs) {
         parameters += "&categoryIds=" + self.CategoryIDs;
       }
