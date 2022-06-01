@@ -255,7 +255,7 @@ Vue.component("VActivitiesAZ", {
   methods: {
     /**
      * Fetch groups from API
-     * @param bool append - are we getting more groups to append to the current list?
+     * @param append bool
      */
     getGroups: function (append = false) {
       let self = this;
@@ -307,7 +307,7 @@ Vue.component("VActivitiesAZ", {
       let self = this;
       return this.Categories.filter((category) => {
         if (self.SelectedParent) {
-          return category.parent_id == self.SelectedParent.id;
+          return category.parent_id === self.SelectedParent.id;
         }
       });
     },
