@@ -180,7 +180,16 @@ let layout = `
 
 Vue.component("VActivitiesAZ", {
   template: layout,
-  props: ["siteid", "selectedparents", "title", "selectedcategory"],
+  props: {
+    siteid: { type: String, required: true },
+    selectedparents: { type: String, required: false, default: "2,24" },
+    title: {
+      type: String,
+      required: false,
+      default: "Clubs and Societies: A-Z",
+    },
+    selectedcategory: { type: String, required: false },
+  },
   data() {
     return {
       Categories: [],
@@ -196,18 +205,13 @@ Vue.component("VActivitiesAZ", {
     };
   },
   created() {
-    var self = this;
+    let self = this;
     if (self.selectedparents) {
       self.SelectedParents = self.selectedparents.split(",");
     } else if (self.selectedcategory) {
       self.CategoryIDs = self.selectedcategory;
-    } else {
-      self.SelectedParents = "2,24";
     }
 
-    if (!self.title) {
-      self.title = "Clubs and Societies: A-Z";
-    }
     //check if looking for a specific activity, search, etc...
     let urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has("search")) {
