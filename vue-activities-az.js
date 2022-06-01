@@ -205,6 +205,9 @@ Vue.component("VActivitiesAZ", {
     };
   },
   created() {
+    // Set default headers globally for Axios:
+    axios.defaults.headers.get["X-Site-Id"] = this.siteid;
+
     let self = this;
     if (self.selectedparents) {
       self.SelectedParents = self.selectedparents.split(",");
@@ -222,12 +225,7 @@ Vue.component("VActivitiesAZ", {
       //Get parents
       axios
         .get(
-          "https://pluto.sums.su/api/groups/categories?sortBy=name&isParent=1",
-          {
-            headers: {
-              "X-Site-Id": self.siteid,
-            },
-          }
+          "https://pluto.sums.su/api/groups/categories?sortBy=name&isParent=1"
         )
         .then(function (response) {
           response.data.forEach((category) => {
@@ -240,12 +238,7 @@ Vue.component("VActivitiesAZ", {
       axios
         .get(
           "https://pluto.sums.su/api/groups/categories?sortBy=name&isParent=0&parentIds=" +
-            self.selectedparents,
-          {
-            headers: {
-              "X-Site-Id": self.siteid,
-            },
-          }
+            self.selectedparents
         )
         .then(function (response) {
           self.Categories = response.data;
@@ -283,11 +276,7 @@ Vue.component("VActivitiesAZ", {
         parameters += "&parentCategoryId=" + self.SelectedParent.id;
       }
       axios
-        .get("https://pluto.sums.su/api/groups?" + parameters, {
-          headers: {
-            "X-Site-Id": self.siteid,
-          },
-        })
+        .get("https://pluto.sums.su/api/groups?" + parameters)
         .then(function (response) {
           //if we want more events (append = true), add to array
           if (append) {
